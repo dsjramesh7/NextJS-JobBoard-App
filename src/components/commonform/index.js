@@ -35,6 +35,7 @@ const CommonForm = ({
             />
           </div>
         );
+        break;
 
       case "file":
         content = (
@@ -50,7 +51,7 @@ const CommonForm = ({
             />
           </Label>
         );
-
+        break;
       default:
         content = (
           <div className="relative flex items-center mt-8">
@@ -81,7 +82,7 @@ const CommonForm = ({
       {formControls.map((control) => renderInputByComponentType(control))}
       <Button
         type={btnType || "submit"}
-        className="disabled:opacity-60 flex h-11 justify-center items-center px-5"
+        className="disabled:opacity-60 flex h-11 justify-center items-center px-5 mt-4"
         disabled={isBtnDisabled}
       >
         {buttonText}

@@ -2,13 +2,30 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useState } from "react";
 import CommonForm from "../commonform";
-import { recruiterOnboardFormControls } from "@/utils";
+import {
+  candidateOnboardFormControls,
+  initialCandidateFormData,
+  initialRecruiterFormData,
+  recruiterOnboardFormControls,
+} from "@/utils";
 
 const OnBoard = () => {
   const [currentTab, setCurrentTab] = useState("candidate");
+  const [recruiterFormData, setRecuriterFormData] = useState(
+    initialRecruiterFormData
+  );
+  const [candidateFormData, setCandidateFormData] = useState(
+    initialCandidateFormData
+  );
   function handleTabChange(value) {
     setCurrentTab(value);
   }
+
+  const recuriterFormDataValid = () => {
+    return Object.keys(recruiterFormData).every(
+      (key) => recruiterFormData[key].trim() !== ""
+    );
+  };
   return (
     <div className="bg-white">
       <Tabs value={currentTab} onValueChange={handleTabChange}>
@@ -22,9 +39,22 @@ const OnBoard = () => {
               <TabsTrigger value="recruiter">Recruiter</TabsTrigger>
             </TabsList>
           </div>
-          <TabsContent value="candidate">Candidate</TabsContent>
+          <TabsContent value="candidate">
+            <CommonForm
+              formControls={candidateOnboardFormControls}
+              buttonText={"Onboard as candidate"}
+              formData={candidateFormData}
+              setFormData={setCandidateFormData}
+            />
+          </TabsContent>
           <TabsContent value="recruiter">
-            <CommonForm formControls={recruiterOnboardFormControls} />
+            <CommonForm
+              formControls={recruiterOnboardFormControls}
+              buttonText={"Onboard as recruiter"}
+              formData={recruiterFormData}
+              setFormData={setRecuriterFormData}
+              isBtnDisabled={!recuriterFormDataValid()}
+            />
           </TabsContent>
         </div>
       </Tabs>
