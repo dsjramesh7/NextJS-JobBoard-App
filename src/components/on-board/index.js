@@ -8,6 +8,7 @@ import {
   initialRecruiterFormData,
   recruiterOnboardFormControls,
 } from "@/utils";
+import { useUser } from "@clerk/nextjs";
 
 const OnBoard = () => {
   const [currentTab, setCurrentTab] = useState("candidate");
@@ -20,12 +21,16 @@ const OnBoard = () => {
   function handleTabChange(value) {
     setCurrentTab(value);
   }
-
   const recuriterFormDataValid = () => {
     return Object.keys(recruiterFormData).every(
       (key) => recruiterFormData[key].trim() !== ""
     );
   };
+
+  const currentAuthUser = useUser();
+  console.log(currentAuthUser);
+
+  const createProfileActionHere = async () => {};
   return (
     <div className="bg-white">
       <Tabs value={currentTab} onValueChange={handleTabChange}>
@@ -54,6 +59,7 @@ const OnBoard = () => {
               formData={recruiterFormData}
               setFormData={setRecuriterFormData}
               isBtnDisabled={!recuriterFormDataValid()}
+              action={createProfileActionHere}
             />
           </TabsContent>
         </div>

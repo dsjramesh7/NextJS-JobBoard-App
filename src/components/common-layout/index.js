@@ -1,5 +1,5 @@
+import { currentUser } from "@clerk/nextjs/dist/types/server";
 import Header from "../header";
-import { currentUser } from "@clerk/nextjs/server";
 
 const CommonLayout = async ({ children }) => {
   const user = await currentUser();
