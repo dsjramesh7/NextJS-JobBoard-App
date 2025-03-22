@@ -1,10 +1,12 @@
 import Header from "../header";
+import { currentUser } from "@clerk/nextjs/server";
 
-const CommonLayout = ({ children }) => {
+const CommonLayout = async ({ children }) => {
+  const user = await currentUser();
   return (
     <div className="mx-auto max-w-7xl p-6 lg:px-8">
       {/* Header component */}
-      <Header />
+      <Header user={JSON.parse(JSON.stringify(user))} />
       {/* Header component */}
 
       {/* main component */}

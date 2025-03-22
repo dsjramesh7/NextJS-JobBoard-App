@@ -2,9 +2,46 @@ import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Button } from "../ui/button";
 import { AlignJustify } from "lucide-react";
 import Link from "next/link";
-import { MenuItems } from "@/utils/data";
+import { UserButton } from "@clerk/nextjs";
 
-const Header = () => {
+const Header = ({ user }) => {
+  const MenuItems = [
+    {
+      label: "Home",
+      path: "/",
+      show: true,
+    },
+    {
+      label: "Login",
+      path: "/sign-in",
+      show: !user,
+    },
+    {
+      label: "Register",
+      path: "/sign-up",
+      show: !user,
+    },
+    {
+      label: "Jobs",
+      path: "/jobs",
+      show: user,
+    },
+    {
+      label: "Activity",
+      path: "/activity",
+      show: user,
+    },
+    {
+      label: "Membership",
+      path: "/membership",
+      show: user,
+    },
+    {
+      label: "Account",
+      path: "/account",
+      show: user,
+    },
+  ];
   return (
     <div>
       <header className="flex h-16 w-full shrink-0 items-center">
@@ -35,6 +72,8 @@ const Header = () => {
               ) : (
                 <h1>Nothing Present here</h1>
               )}
+
+              <UserButton afterSwitchSessionUrl="/" />
             </div>
           </SheetContent>
         </Sheet>
@@ -53,6 +92,7 @@ const Header = () => {
               </Link>
             ) : null
           )}
+          <UserButton afterSwitchSessionUrl="/" />
         </nav>
       </header>
     </div>

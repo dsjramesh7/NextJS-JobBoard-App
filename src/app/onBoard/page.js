@@ -1,7 +1,7 @@
-import React from "react";
+import OnBoard from "@/components/on-board";
 
 const OnBoardPage = () => {
-  return <div>This is our onboard page</div>;
+  return <OnBoard />;
 };
 
 export default OnBoardPage;
