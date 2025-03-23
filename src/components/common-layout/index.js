@@ -1,4 +1,4 @@
-import { currentUser } from "@clerk/nextjs/dist/types/server";
+import { currentUser } from "@clerk/nextjs";
 import Header from "../header";
 
 const CommonLayout = async ({ children }) => {
