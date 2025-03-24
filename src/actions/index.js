@@ -10,3 +10,10 @@ export const createProfileAction = async (formData, pathToRevalidate) => {
   await Profile.create(formData);
   revalidatePath(pathToRevalidate);
 };
+
+//fetch User
+export const fetchUserAction = async (id) => {
+  await connectToDB();
+  const result = await Profile.findOne({ userId: id });
+  return JSON.parse(JSON.stringify(result));
+};

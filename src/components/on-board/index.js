@@ -9,6 +9,7 @@ import {
   recruiterOnboardFormControls,
 } from "@/utils";
 import { useUser } from "@clerk/nextjs";
+import { createProfileAction } from "@/actions";
 
 const OnBoard = () => {
   const [currentTab, setCurrentTab] = useState("candidate");
@@ -28,9 +29,20 @@ const OnBoard = () => {
   };
 
   const currentAuthUser = useUser();
-  console.log(currentAuthUser);
+  const { user } = currentAuthUser;
+  console.log(user);
 
-  const createProfileActionHere = async () => {};
+  const createProfileActionHere = async () => {
+    const data = {
+      recruiterInfo: recruiterFormData,
+      role: "recruiter",
+      isPremiumUser: false,
+      userId: user?.id,
+      email: user?.primaryEmailAddress?.emailAddress,
+    };
+
+    await createProfileAction(data, "/onboard");
+  };
   return (
     <div className="bg-white">
       <Tabs value={currentTab} onValueChange={handleTabChange}>
