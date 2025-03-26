@@ -1,12 +1,13 @@
+import { fetchUserAction } from "@/actions";
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 async function Home() {
   const user = await currentUser();
   console.log("user", user);
 
-  const profileInfo = null;
+  const profileInfo = await fetchUserAction(user?.id);
 
-  if (user && !profileInfo?.id) redirect("/onboard");
+  if (user && !profileInfo?._id) redirect("/onboard");
   return <section>safsadf</section>;
 }
 export default Home;

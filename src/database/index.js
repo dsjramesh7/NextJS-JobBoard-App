@@ -1,3 +1,4 @@
+import { PASSWORD, USERNAME } from "@/utils/constants";
 import * as mongoose from "mongoose";
 const connectToDB = async () => {
   const mongodbURL = `mongodb+srv://${USERNAME}:${PASSWORD}@jobboardapp.cl7k7.mongodb.net/`;
