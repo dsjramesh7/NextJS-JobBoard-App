@@ -1,6 +1,6 @@
 "use client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CommonForm from "../commonform";
 import {
   candidateOnboardFormControls,
@@ -10,7 +10,10 @@ import {
 } from "@/utils";
 import { useUser } from "@clerk/nextjs";
 import { createProfileAction } from "@/actions";
+import { createClient } from "@supabase/supabase-js";
+import { API_KEY, SUPABASE_URL } from "@/utils/constants";
 
+const supaBaseClient = createClient(`${SUPABASE_URL}`, `${API_KEY}`);
 const OnBoard = () => {
   const [currentTab, setCurrentTab] = useState("candidate");
   const [recruiterFormData, setRecuriterFormData] = useState(
@@ -19,6 +22,7 @@ const OnBoard = () => {
   const [candidateFormData, setCandidateFormData] = useState(
     initialCandidateFormData
   );
+  const [file, setFile] = useState(null);
   function handleTabChange(value) {
     setCurrentTab(value);
   }
@@ -30,7 +34,7 @@ const OnBoard = () => {
 
   const currentAuthUser = useUser();
   const { user } = currentAuthUser;
-  console.log(user);
+  // console.log(user);
 
   const createProfileActionHere = async () => {
     const data = {
@@ -43,6 +47,31 @@ const OnBoard = () => {
 
     await createProfileAction(data, "/onboard");
   };
+
+  function handleFileChange(event) {
+    event.preventDefault();
+    setFile(event.target.files[0]);
+  }
+
+  const handleFileUploadToSupabase = async () => {
+    const { data, error } = await supaBaseClient.storage
+      .from("job-board")
+      .upload(`/public/${file.name}`, file, {
+        cacheControl: "3600",
+        upsert: false,
+      });
+    console.log(data, error);
+    if (data) {
+      setCandidateFormData({
+        ...candidateFormData,
+        resume: data.path,
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (file) handleFileUploadToSupabase();
+  }, [file]);
   return (
     <div className="bg-white">
       <Tabs value={currentTab} onValueChange={handleTabChange}>
@@ -62,6 +91,7 @@ const OnBoard = () => {
               buttonText={"Onboard as candidate"}
               formData={candidateFormData}
               setFormData={setCandidateFormData}
+              handleFileChange={handleFileChange}
             />
           </TabsContent>
           <TabsContent value="recruiter">
