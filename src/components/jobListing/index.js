@@ -1,8 +1,9 @@
 "use client";
 
 import PostNewJobs from "../post-new-jobs";
+import RecruiterJobCard from "../recruiter-job-card";
 
-const JobListing = ({ user, profileInfo }) => {
+const JobListing = ({ user, profileInfo, jobList }) => {
   return (
     <div>
       <div className="mx-auto max-w-7xl">
@@ -16,11 +17,32 @@ const JobListing = ({ user, profileInfo }) => {
             {profileInfo?.role === "candidate" ? (
               <p>filter</p>
             ) : (
-              <PostNewJobs />
+              <PostNewJobs user={user} profileInfo={profileInfo} />
             )}
           </div>
         </div>
-        <div>job listing</div>
+        <div className="pt-6 pb-24">
+          <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-3">
+            <div className="lg:col-span-4">
+              <div className="container mx-auto p-0 space-y-8">
+                <div className="grid grid-cols-1 gap-x-4 gap-y-8 md:grid-cols-2 lg:grid-cols-3">
+                  {jobList && jobList.length > 0
+                    ? jobList.map((jobItem) =>
+                        profileInfo?.role === "candidate" ? null : ( // /> //   jobApplications={jobApplications} //   jobItem={jobItem} //   profileInfo={profileInfo} // <CandidateJobCard
+                          <RecruiterJobCard
+                            key={profileInfo?.id}
+                            profileInfo={profileInfo}
+                            jobItem={jobItem}
+                            // jobApplications={jobApplications}
+                          />
+                        )
+                      )
+                    : null}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
