@@ -1,5 +1,6 @@
 "use client";
 
+import CandidateJobCard from "../candidate-job-card";
 import PostNewJobs from "../post-new-jobs";
 import RecruiterJobCard from "../recruiter-job-card";
 
@@ -14,9 +15,7 @@ const JobListing = ({ user, profileInfo, jobList }) => {
               : "Jobs Dashboard"}
           </h1>
           <div>
-            {profileInfo?.role === "candidate" ? (
-              <PostNewJobs user={user} profileInfo={profileInfo} />
-            ) : (
+            {profileInfo?.role === "candidate" ? null : (
               <PostNewJobs user={user} profileInfo={profileInfo} />
             )}
           </div>
@@ -28,7 +27,13 @@ const JobListing = ({ user, profileInfo, jobList }) => {
                 <div className="grid grid-cols-1 gap-x-4 gap-y-8 md:grid-cols-2 lg:grid-cols-3">
                   {jobList && jobList.length > 0
                     ? jobList.map((jobItem) =>
-                        profileInfo?.role === "candidate" ? null : ( // /> //   jobApplications={jobApplications} //   jobItem={jobItem} //   profileInfo={profileInfo} // <CandidateJobCard
+                        profileInfo?.role === "candidate" ? (
+                          <CandidateJobCard
+                            jobItem={jobItem}
+                            profileInfo={profileInfo}
+                            key={profileInfo?.id}
+                          />
+                        ) : (
                           <RecruiterJobCard
                             key={profileInfo?.id}
                             profileInfo={profileInfo}
