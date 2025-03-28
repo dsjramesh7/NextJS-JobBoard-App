@@ -13,7 +13,7 @@ export const createProfileAction = async (formData, pathToRevalidate) => {
 };
 
 //fetch User
-export const fetchUserAction = async (id) => {
+export const fetchProfileAction = async (id) => {
   await connectToDB();
   const result = await Profile.findOne({ userId: id });
   return JSON.parse(JSON.stringify(result));
@@ -34,3 +34,8 @@ export const fetchJobsForRecruiterAction = async (id) => {
   return JSON.parse(JSON.stringify(result));
 };
 //candidate
+export const fetchJobsForCandidateAction = async () => {
+  await connectToDB();
+  const result = await Job.find({});
+  return JSON.parse(JSON.stringify(result));
+};

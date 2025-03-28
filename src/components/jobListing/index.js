@@ -15,7 +15,7 @@ const JobListing = ({ user, profileInfo, jobList }) => {
           </h1>
           <div>
             {profileInfo?.role === "candidate" ? (
-              <p>filter</p>
+              <PostNewJobs user={user} profileInfo={profileInfo} />
             ) : (
               <PostNewJobs user={user} profileInfo={profileInfo} />
             )}

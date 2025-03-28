@@ -12,9 +12,11 @@ const PostNewJobs = ({ user, profileInfo }) => {
     ...initialPostNewJobFormData,
     companyName: profileInfo?.recruiterInfo?.companyName,
   });
+  console.log("Form Data Debug:", formData);
+
   const handleJobPostValid = () => {
     return Object.keys(formData).every(
-      (control) => formData[control].trim() !== ""
+      (control) => formData[control]?.trim() !== ""
     );
   };
   const createNewJob = async () => {
@@ -32,11 +34,11 @@ const PostNewJobs = ({ user, profileInfo }) => {
     });
     setShowDialog(false);
   };
+
   return (
     <div>
       <Button
         onClick={() => {
-          console.log("openend");
           setShowDialog(true);
         }}
         className="disabled:opacity-60 flex h-11 justify-center items-center px-5 mt-4 cursor-pointer"
@@ -46,7 +48,6 @@ const PostNewJobs = ({ user, profileInfo }) => {
       <Dialog
         open={showDialog}
         onOpenChange={() => {
-          console.log("onopenopendnas");
           setShowDialog(false);
           setFormData({
             ...initialPostNewJobFormData,
