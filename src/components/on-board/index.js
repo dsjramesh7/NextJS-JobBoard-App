@@ -26,9 +26,17 @@ const OnBoard = () => {
   function handleTabChange(value) {
     setCurrentTab(value);
   }
+
+  // for validation
   const recuriterFormDataValid = () => {
     return Object.keys(recruiterFormData).every(
       (key) => recruiterFormData[key].trim() !== ""
+    );
+  };
+
+  const candidateFormDataValid = () => {
+    return Object.keys(candidateFormData).every(
+      (key) => candidateFormData[key].trim() !== ""
     );
   };
 
@@ -38,7 +46,7 @@ const OnBoard = () => {
 
   const createProfileActionHere = async () => {
     const data =
-      currentTab === "candidtate"
+      currentTab === "candidate"
         ? {
             candidateInfo: candidateFormData,
             role: "candidate",
@@ -96,11 +104,13 @@ const OnBoard = () => {
           </div>
           <TabsContent value="candidate">
             <CommonForm
+              action={createProfileActionHere}
               formControls={candidateOnboardFormControls}
               buttonText={"Onboard as candidate"}
               formData={candidateFormData}
               setFormData={setCandidateFormData}
               handleFileChange={handleFileChange}
+              isBtnDisabled={!candidateFormDataValid()}
             />
           </TabsContent>
           <TabsContent value="recruiter">
