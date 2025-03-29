@@ -67,6 +67,15 @@ const CandidateJobCard = ({ jobItem, profileInfo }) => {
           <h3 className="text-2xl font-medium text-black mt-3">
             Experience: {jobItem?.experience} year
           </h3>
+          <div className="flex gap-4 mt-6">
+            {jobItem?.skills.split(",").map((skillItem) => (
+              <div key={skillItem?.id}>
+                <h2 className="text-[13px] font-medium text-black">
+                  {skillItem}
+                </h2>
+              </div>
+            ))}
+          </div>
         </DrawerContent>
       </Drawer>
     </>
