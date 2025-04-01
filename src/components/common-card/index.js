@@ -8,21 +8,30 @@ import {
 
 function CommonCard({ title, icon, description, footerContent }) {
   return (
-    <Card className="flex bg-gray-100 flex-col gap-6 rounded-2xl p-8 transition duration-300 hover:bg-white hover:shadow-2xl hover:shadow-gray-600/10 cursor-pointer">
-      <CardHeader className="p-0">
-        {icon ? icon : null}
-        {title ? (
-          <CardTitle className="text-xl max-w-[250px] text-ellipsis overflow-hidden whitespace-nowrap font-semibold text-gray-950">
+    <Card
+      className="
+      flex flex-col gap-5 p-6 md:p-8 rounded-2xl bg-gray-100 
+      transition-all duration-300 shadow-md shadow-gray-300/40 
+      hover:bg-white hover:shadow-xl hover:scale-105 hover:shadow-gray-600/20
+      cursor-pointer
+    "
+    >
+      <CardHeader className="p-0 flex flex-col gap-2">
+        {icon && <div className="text-gray-700 text-3xl">{icon}</div>}
+        {title && (
+          <CardTitle className="text-xl md:text-2xl font-semibold text-gray-950 truncate">
             {title}
           </CardTitle>
-        ) : null}
-        {description ? (
-          <CardDescription className="mt-3 text-gray-600">
+        )}
+        {description && (
+          <CardDescription className="mt-2 text-gray-600 text-sm md:text-base leading-relaxed">
             {description}
           </CardDescription>
-        ) : null}
+        )}
       </CardHeader>
-      <CardFooter className="p-0">{footerContent}</CardFooter>
+      <CardFooter className="p-0 mt-auto text-gray-700 text-sm md:text-base">
+        {footerContent}
+      </CardFooter>
     </Card>
   );
 }
