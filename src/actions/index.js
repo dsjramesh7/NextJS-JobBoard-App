@@ -47,7 +47,6 @@ export async function createJobApplicationAction(data, pathToRevalidate) {
   await Application.create(data);
   revalidatePath(pathToRevalidate);
 }
-
 //fetch job application - candidate
 export const fetchJobApplicationForCandidate = async (candidateID) => {
   await connectToDB();
@@ -60,5 +59,11 @@ export const fetchJobApplicationForRecruiter = async (recruiterID) => {
   const result = await Application.find({ recruiterUserID: recruiterID });
   return JSON.parse(JSON.stringify(result));
 };
-
 //update job application
+
+//get candidate details by candidate ID
+export const getCandidateDetailsByIDAction = async (currentCandidateID) => {
+  await connectToDB();
+  const result = await Profile.findOne({ userId: currentCandidateID });
+  return JSON.parse(JSON.stringify(result));
+};

@@ -1,5 +1,6 @@
 "use client";
 
+import { getCandidateDetailsByIDAction } from "@/actions";
 import { Button } from "../ui/button";
 import { Dialog, DialogContent } from "../ui/dialog";
 
@@ -10,6 +11,15 @@ function CandidateList({
   showCurrentCandidateDetailsModal,
   setShowCurrentCandidateDetailsModal,
 }) {
+  const handleFetchCandidateDetails = async (getCurrentCandidateID) => {
+    const data = await getCandidateDetailsByIDAction(getCurrentCandidateID);
+    console.log(data);
+
+    if (data) {
+      setShowCurrentCandidateDetailsModal(true);
+      setCurrentCandidateDetails(data);
+    }
+  };
   return (
     <>
       <div className="grid grid-cols-1 gap-3 p-10 md:grid-cols-2 lg:grid-cols-3">
@@ -23,7 +33,14 @@ function CandidateList({
                   <h3 className="text-lg font-bold dark:text-black">
                     {jobApplicantItem?.name}
                   </h3>
-                  <Button className="dark:bg-[#fffa27]  flex h-11 items-center justify-center px-5">
+                  <Button
+                    onClick={() =>
+                      handleFetchCandidateDetails(
+                        jobApplicantItem?.candidateUserID
+                      )
+                    }
+                    className="dark:bg-[#fffa27]  flex h-11 items-center justify-center px-5"
+                  >
                     View Profile
                   </Button>
                 </div>
@@ -41,7 +58,7 @@ function CandidateList({
         <DialogContent>
           <div>
             <h1 className="text-2xl font-bold dark:text-white text-black">
-              {currentCandidateDetails?.candidateInfo?.name},{" "}
+              {currentCandidateDetails?.candidateInfo?.name}
               {currentCandidateDetails?.email}
             </h1>
             <p className="text-xl font-medium dark:text-white text-black">
