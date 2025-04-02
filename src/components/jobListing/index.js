@@ -30,14 +30,14 @@ const JobListing = ({ user, profileInfo, jobList, jobApplications }) => {
                     ? jobList.map((jobItem) =>
                         profileInfo?.role === "candidate" ? (
                           <CandidateJobCard
-                            key={profileInfo?.id}
+                            key={jobItem?.id}
                             jobItem={jobItem}
                             profileInfo={profileInfo}
                             jobApplications={jobApplications}
                           />
                         ) : (
                           <RecruiterJobCard
-                            key={profileInfo?.id}
+                            key={jobItem?.id}
                             profileInfo={profileInfo}
                             jobItem={jobItem}
                             jobApplications={jobApplications}
