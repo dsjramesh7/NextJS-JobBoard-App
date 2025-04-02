@@ -3,9 +3,17 @@ import React from "react";
 import CommonCard from "../common-card";
 import JobIcon from "../job-icon";
 import { Button } from "../ui/button";
+import JobApplicants from "../job-applicants";
 
 const RecruiterJobCard = ({ jobItem, jobApplications }) => {
-  console.log("recu", jobApplications);
+  // console.log("recruiter job application", jobApplications);
+  const [showApplicantsDrawer, setShowApplicantsDrawer] = useState(false);
+  const [currentCandidateDetails, setCurrentCandidateDetails] = useState(null);
+  const [
+    showCurrentCandidateDetailsModal,
+    setShowCurrentCandidateDetailsModal,
+  ] = useState(false);
+
   return (
     <div>
       <CommonCard
@@ -20,6 +28,20 @@ const RecruiterJobCard = ({ jobItem, jobApplications }) => {
             Applicants
           </Button>
         }
+      />
+      <JobApplicants
+        showApplicantsDrawer={showApplicantsDrawer}
+        setShowApplicantsDrawer={setShowApplicantsDrawer}
+        showCurrentCandidateDetailsModal={showCurrentCandidateDetailsModal}
+        setShowCurrentCandidateDetailsModal={
+          setShowCurrentCandidateDetailsModal
+        }
+        currentCandidateDetails={currentCandidateDetails}
+        setCurrentCandidateDetails={setCurrentCandidateDetails}
+        jobItem={jobItem}
+        jobApplications={jobApplications.filter(
+          (jobApplicantItem) => jobApplicantItem.jobID === jobItem?._id
+        )}
       />
     </div>
   );
