@@ -12,7 +12,7 @@ const PostNewJobs = ({ user, profileInfo }) => {
     ...initialPostNewJobFormData,
     companyName: profileInfo?.recruiterInfo?.companyName,
   });
-  console.log("Form Data Debug:", formData);
+  // console.log("Form Data Debug:", formData);
 
   const handleJobPostValid = () => {
     return Object.keys(formData).every(

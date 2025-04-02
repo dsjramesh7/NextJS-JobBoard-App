@@ -12,9 +12,26 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "../ui/drawer";
+import { createJobApplicationAction } from "@/actions";
 
-const CandidateJobCard = ({ jobItem, profileInfo }) => {
+const CandidateJobCard = ({ jobItem, profileInfo, jobApplications }) => {
+  // console.log("JobItem", jobItem);
   const [showJobDetailsDrawer, setShowJobDetailsDrawer] = useState(false);
+  const handleCandidateJobApply = async () => {
+    await createJobApplicationAction(
+      {
+        recruiterUserID: jobItem?.recruiterId,
+        name: profileInfo?.candidateInfo?.name,
+        email: profileInfo?.email,
+        candidateUserID: profileInfo?.userId,
+        status: ["Applied"],
+        jobID: jobItem?._id,
+        jobAppliedDate: new Date().toLocaleDateString(),
+      },
+      "/jobs"
+    );
+    setShowJobDetailsDrawer(false);
+  };
   return (
     <>
       <Drawer
@@ -41,8 +58,22 @@ const CandidateJobCard = ({ jobItem, profileInfo }) => {
                 {jobItem?.title}
               </DrawerTitle>
               <div className="flex gap-3">
-                <Button className="flex h-11 justify-center items-center px-5 mt-4">
-                  Apply
+                <Button
+                  onClick={handleCandidateJobApply}
+                  disabled={
+                    jobApplications.findIndex(
+                      (item) => item.jobID === jobItem?._id
+                    ) > -1
+                      ? true
+                      : false
+                  }
+                  className="disabled:opacity-65 flex h-11 justify-center items-center px-5 mt-4"
+                >
+                  {jobApplications.findIndex(
+                    (item) => item.jobID === jobItem?._id
+                  ) > -1
+                    ? "Applied"
+                    : "Apply"}
                 </Button>
                 <Button
                   onClick={() => setShowJobDetailsDrawer(false)}
@@ -70,7 +101,7 @@ const CandidateJobCard = ({ jobItem, profileInfo }) => {
           <div className="flex gap-4 mt-6">
             {jobItem?.skills.split(",").map((skillItem) => (
               <div key={skillItem?.id}>
-                <h2 className="text-[13px] font-medium text-black">
+                <h2 className="w-[150px] mt-6 flex justify-center dark:bg-white  items-center h-[40px] bg-black rounded-[4px] text-white">
                   {skillItem}
                 </h2>
               </div>
