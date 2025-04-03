@@ -24,7 +24,7 @@ const Header = ({ user, profileInfo }) => {
     {
       label: "Activity",
       path: "/activity",
-      show: profileInfo?.role === "candidtate",
+      show: profileInfo?.role === "candidate",
     },
     {
       label: "Jobs",

@@ -1,6 +1,9 @@
 "use client";
 
-import { getCandidateDetailsByIDAction } from "@/actions";
+import {
+  getCandidateDetailsByIDAction,
+  updateJobApplicationAction,
+} from "@/actions";
 import { Button } from "../ui/button";
 import { Dialog, DialogContent } from "../ui/dialog";
 import { createClient } from "@supabase/supabase-js";
@@ -25,7 +28,7 @@ function CandidateList({
     }
   };
 
-  const handlePreviewResume = async () => {
+  const handlePreviewResume = () => {
     const { data } = supaBaseClient.storage
       .from("job-board")
       .getPublicUrl(currentCandidateDetails?.candidateInfo?.resume);
@@ -38,6 +41,23 @@ function CandidateList({
     a.click();
     document.body.removeChild(a);
   };
+
+  async function handleUpdateJobStatus(getCurrentStatus) {
+    let cpyJobApplicants = [...jobApplications];
+    const indexOfCurrentJobApplicant = cpyJobApplicants.findIndex(
+      (item) => item.candidateUserID === currentCandidateDetails?.userId
+    );
+    const jobApplicantsToUpdate = {
+      ...cpyJobApplicants[indexOfCurrentJobApplicant],
+      status:
+        cpyJobApplicants[indexOfCurrentJobApplicant].status.concat(
+          getCurrentStatus
+        ),
+    };
+
+    // console.log(jobApplicantsToUpdate, "jobApplicantsToUpdate");
+    await updateJobApplicationAction(jobApplicantsToUpdate, "/jobs");
+  }
   return (
     <>
       <div className="grid grid-cols-1 gap-3 p-10 md:grid-cols-2 lg:grid-cols-3">
@@ -137,6 +157,7 @@ function CandidateList({
               Resume
             </Button>
             <Button
+              onClick={() => handleUpdateJobStatus("selected")}
               className=" disabled:opacity-65 flex h-11 items-center justify-center px-5"
               disabled={
                 jobApplications
@@ -165,6 +186,7 @@ function CandidateList({
                 : "Select"}
             </Button>
             <Button
+              onClick={() => handleUpdateJobStatus("rejected")}
               className=" disabled:opacity-65 flex h-11 items-center justify-center px-5"
               disabled={
                 jobApplications
