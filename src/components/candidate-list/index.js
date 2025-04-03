@@ -3,6 +3,8 @@
 import { getCandidateDetailsByIDAction } from "@/actions";
 import { Button } from "../ui/button";
 import { Dialog, DialogContent } from "../ui/dialog";
+import { createClient } from "@supabase/supabase-js";
+import { API_KEY, SUPABASE_URL } from "@/utils/constants";
 
 function CandidateList({
   jobApplications,
@@ -11,6 +13,8 @@ function CandidateList({
   showCurrentCandidateDetailsModal,
   setShowCurrentCandidateDetailsModal,
 }) {
+  const supaBaseClient = createClient(`${SUPABASE_URL}`, `${API_KEY}`);
+
   const handleFetchCandidateDetails = async (getCurrentCandidateID) => {
     const data = await getCandidateDetailsByIDAction(getCurrentCandidateID);
     console.log(data);
@@ -19,6 +23,20 @@ function CandidateList({
       setShowCurrentCandidateDetailsModal(true);
       setCurrentCandidateDetails(data);
     }
+  };
+
+  const handlePreviewResume = async () => {
+    const { data } = supaBaseClient.storage
+      .from("job-board")
+      .getPublicUrl(currentCandidateDetails?.candidateInfo?.resume);
+
+    const a = document.createElement("a");
+    a.href = data?.publicUrl;
+    a.setAttribute("download", "Resume.pdf");
+    a.setAttribute("target", "_blank");
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
   };
   return (
     <>
@@ -58,7 +76,7 @@ function CandidateList({
         <DialogContent>
           <div>
             <h1 className="text-2xl font-bold dark:text-white text-black">
-              {currentCandidateDetails?.candidateInfo?.name}
+              {currentCandidateDetails?.candidateInfo?.name},
               {currentCandidateDetails?.email}
             </h1>
             <p className="text-xl font-medium dark:text-white text-black">
@@ -81,7 +99,7 @@ function CandidateList({
             </p>
             <div className="flex items-center gap-4 mt-6">
               <h1 className="dark:text-white">Previous Companies</h1>
-              <div className="flex flex-wrap items-center gap-4 mt-6">
+              <div className="flex flex-wrap items-center gap-4">
                 {currentCandidateDetails?.candidateInfo?.previousCompanies
                   .split(",")
                   .map((skillItem) => (
@@ -112,7 +130,10 @@ function CandidateList({
             </div>
           </div>
           <div className="flex gap-3">
-            <Button className=" flex h-11 items-center justify-center px-5">
+            <Button
+              onClick={handlePreviewResume}
+              className=" flex h-11 items-center justify-center px-5"
+            >
               Resume
             </Button>
             <Button
