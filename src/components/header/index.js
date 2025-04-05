@@ -1,3 +1,4 @@
+"use client";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { Button } from "../ui/button";
 import { AlignJustify } from "lucide-react";
@@ -84,6 +85,7 @@ const Header = ({ user, profileInfo }) => {
           {MenuItems.map((item) =>
             item.show ? (
               <Link
+                onClick={() => sessionStorage.removeItem("filterParams")}
                 key={item.label}
                 href={item.path}
                 className="group inline-flex h-9 w-max items-center rounded-md bg-white px-4 py-2  font-medium text-sm"
