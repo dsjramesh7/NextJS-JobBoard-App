@@ -33,11 +33,6 @@ const Header = ({ user, profileInfo }) => {
       show: user,
     },
     {
-      label: "Membership",
-      path: "/membership",
-      show: user,
-    },
-    {
       label: "Account",
       path: "/account",
       show: user,

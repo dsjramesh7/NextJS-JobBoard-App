@@ -111,3 +111,111 @@ export const createFilterCategoryAction = async () => {
   const result = await Job.find({});
   return JSON.parse(JSON.stringify(result));
 };
+
+//update profile action
+export async function updateProfileAction(data, pathToRevalidate) {
+  await connectToDB();
+  const {
+    userId,
+    role,
+    email,
+    isPremiumUser,
+    memberShipType,
+    memberShipStartDate,
+    memberShipEndDate,
+    recruiterInfo,
+    candidateInfo,
+    _id,
+  } = data;
+
+  await Profile.findOneAndUpdate(
+    {
+      _id: _id,
+    },
+    {
+      userId,
+      role,
+      email,
+      isPremiumUser,
+      memberShipType,
+      memberShipStartDate,
+      memberShipEndDate,
+      recruiterInfo,
+      candidateInfo,
+    },
+    { new: true }
+  );
+
+  revalidatePath(pathToRevalidate);
+}
+
+//create stripe price id based on tier selection
+export async function createPriceIdAction(data) {
+  const session = await stripe.prices.create({
+    currency: "inr",
+    unit_amount: data?.amount * 100,
+    recurring: {
+      interval: "year",
+    },
+    product_data: {
+      name: "Premium Plan",
+    },
+  });
+
+  return {
+    success: true,
+    id: session?.id,
+  };
+}
+
+//create payment logic
+export async function createStripePaymentAction(data) {
+  const session = await stripe.checkout.sessions.create({
+    payment_method_types: ["card"],
+    line_items: data?.lineItems,
+    mode: "subscription",
+    success_url: `${process.env.URL}/membership` + "?status=success",
+    cancel_url: `${process.env.URL}/membership` + "?status=cancel",
+  });
+
+  return {
+    success: true,
+    id: session?.id,
+  };
+}
+
+//create post action
+export async function createFeedPostAction(data, pathToRevalidate) {
+  await connectToDB();
+  await Feed.create(data);
+  revalidatePath(pathToRevalidate);
+}
+
+//fetch all posts action
+export async function fetchAllFeedPostsAction() {
+  await connectToDB();
+  const result = await Feed.find({});
+
+  return JSON.parse(JSON.stringify(result));
+}
+
+//update post action
+export async function updateFeedPostAction(data, pathToRevalidate) {
+  await connectToDB();
+  const { userId, userName, message, image, likes, _id } = data;
+  await Feed.findOneAndUpdate(
+    {
+      _id: _id,
+    },
+    {
+      userId,
+      userName,
+      image,
+      message,
+      likes,
+    },
+    { new: true }
+  );
+
+  revalidatePath(pathToRevalidate);
+}
