@@ -1,4 +1,5 @@
 import {
+  createFilterCategoryAction,
   fetchJobApplicationForCandidate,
   fetchJobApplicationForRecruiter,
   fetchJobsForCandidateAction,
@@ -20,12 +21,15 @@ const JobsPage = async () => {
     profileInfo?.role === "candidate"
       ? await fetchJobApplicationForCandidate(user?.id)
       : await fetchJobApplicationForRecruiter(user?.id);
+
+  const fetchFilterCategories = await createFilterCategoryAction();
   return (
     <JobListing
       user={JSON.parse(JSON.stringify(user))}
       profileInfo={profileInfo}
       jobList={jobList}
       jobApplications={getJobApplicationList}
+      fetchFilterCategories={fetchFilterCategories}
     />
   );
 };
