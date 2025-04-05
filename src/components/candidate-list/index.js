@@ -20,7 +20,7 @@ function CandidateList({
 
   const handleFetchCandidateDetails = async (getCurrentCandidateID) => {
     const data = await getCandidateDetailsByIDAction(getCurrentCandidateID);
-    console.log(data);
+    // console.log(data);
 
     if (data) {
       setShowCurrentCandidateDetailsModal(true);

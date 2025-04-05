@@ -29,7 +29,7 @@ const JobsPage = async () => {
       profileInfo={profileInfo}
       jobList={jobList}
       jobApplications={getJobApplicationList}
-      fetchFilterCategories={fetchFilterCategories}
+      filterCategories={fetchFilterCategories}
     />
   );
 };

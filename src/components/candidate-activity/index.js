@@ -5,7 +5,7 @@ import JobIcon from "../job-icon";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 
 function CandidateActivity({ jobList, jobApplicants }) {
-  console.log(jobList, jobApplicants);
+  // console.log(jobList, jobApplicants);
 
   const uniqueStatusArray = [
     ...new Set(
@@ -13,7 +13,7 @@ function CandidateActivity({ jobList, jobApplicants }) {
     ),
   ];
 
-  console.log(uniqueStatusArray);
+  // console.log(uniqueStatusArray);
 
   return (
     <div className="mx-auto max-w-7xl">
