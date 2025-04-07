@@ -22,15 +22,15 @@ function JobListing({
   jobApplications,
   filterCategories,
 }) {
-  console.log("jobList", jobList);
   const [filterParams, setFilterParams] = useState({});
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  function handleFilter(getSectionID, getCurrentOption) {
+  const handleFilter = (getSectionID, getCurrentOption) => {
     let cpyFilterParams = { ...filterParams };
     const indexOfCurrentSection =
       Object.keys(cpyFilterParams).indexOf(getSectionID);
+
     if (indexOfCurrentSection === -1) {
       cpyFilterParams = {
         ...cpyFilterParams,
@@ -39,22 +39,27 @@ function JobListing({
     } else {
       const indexOfCurrentOption =
         cpyFilterParams[getSectionID].indexOf(getCurrentOption);
-      if (indexOfCurrentOption === -1)
+      if (indexOfCurrentOption === -1) {
         cpyFilterParams[getSectionID].push(getCurrentOption);
-      else cpyFilterParams[getSectionID].splice(indexOfCurrentOption, 1);
+      } else {
+        cpyFilterParams[getSectionID].splice(indexOfCurrentOption, 1);
+      }
     }
+
     setFilterParams(cpyFilterParams);
     sessionStorage.setItem("filterParams", JSON.stringify(cpyFilterParams));
-  }
+  };
 
   useEffect(() => {
-    setFilterParams(JSON.parse(sessionStorage.getItem("filterParams")));
+    const savedFilters = sessionStorage.getItem("filterParams");
+    if (savedFilters) {
+      setFilterParams(JSON.parse(savedFilters));
+    }
   }, []);
 
   useEffect(() => {
     if (filterParams && Object.keys(filterParams).length > 0) {
-      let url = "";
-      url = formUrlQuery({
+      const url = formUrlQuery({
         params: searchParams.toString(),
         dataToAdd: filterParams,
       });
@@ -71,42 +76,41 @@ function JobListing({
     ],
   }));
 
-  console.log(filterParams, "filterParams");
-
   return (
-    <div>
-      <div className="mx-auto max-w-7xl">
-        <div className="flex items-baseline dark:border-white justify-between border-b border-gray-200 pb-6 pt-24">
-          <h1 className="text-4xl dark:text-white font-bold tracking-tight text-gray-900">
+    <div className="bg-white dark:bg-black min-h-screen">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        {/* Header Section */}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between border-b border-gray-200 dark:border-gray-700 pb-6 pt-16">
+          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-gray-900 dark:text-white">
             {profileInfo?.role === "candidate"
               ? "Explore All Jobs"
               : "Jobs Dashboard"}
           </h1>
-          <div className="flex items-center">
+
+          <div className="mt-4 md:mt-0 flex items-center space-x-4">
             {profileInfo?.role === "candidate" ? (
-              <Menubar>
+              <Menubar className="bg-white dark:bg-black border border-gray-300 dark:border-gray-700 rounded-lg shadow-sm px-2 py-1">
                 {filterMenus.map((filterMenu) => (
                   <MenubarMenu key={filterMenu.name}>
-                    <MenubarTrigger>{filterMenu.name}</MenubarTrigger>
-                    <MenubarContent>
+                    <MenubarTrigger className="text-sm font-medium text-gray-700 dark:text-gray-200 px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md">
+                      {filterMenu.name}
+                    </MenubarTrigger>
+                    <MenubarContent className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-md shadow-md p-2">
                       {filterMenu.options.map((option, optionIdx) => (
                         <MenubarItem
                           key={optionIdx}
-                          className="flex items-center"
+                          className="flex items-center space-x-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md px-2 py-1"
                           onClick={() => handleFilter(filterMenu.id, option)}
                         >
                           <div
-                            className={`h-4 w-4 dark:border-white border rounded border-gray-900 ${
+                            className={`h-4 w-4 border rounded transition-all duration-200 ${
                               filterParams &&
-                              Object.keys(filterParams).length > 0 &&
-                              filterParams[filterMenu.id] &&
-                              filterParams[filterMenu.id].indexOf(option) > -1
-                                ? "bg-black dark:bg-white"
-                                : ""
-                            } `}
+                              filterParams[filterMenu.id]?.includes(option)
+                                ? "bg-black dark:bg-white border-black dark:border-white"
+                                : "border-gray-300 dark:border-gray-500"
+                            }`}
                           />
-
-                          <Label className="ml-3 dark:text-white cursor-pointer text-sm text-gray-600">
+                          <Label className="ml-1 text-sm text-gray-700 dark:text-gray-200">
                             {option}
                           </Label>
                         </MenubarItem>
@@ -124,33 +128,33 @@ function JobListing({
             )}
           </div>
         </div>
-        <div className="pt-6 pb-24">
-          <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-3">
-            <div className="lg:col-span-4">
-              <div className="container mx-auto p-0 space-y-8">
-                <div className="grid grid-cols-1 gap-x-4 gap-y-8 md:grid-cols-2 lg:grid-cols-3">
-                  {jobList && jobList.length > 0
-                    ? jobList.map((jobItem) =>
-                        profileInfo?.role === "candidate" ? (
-                          <CandidateJobCard
-                            key={jobItem.name}
-                            profileInfo={profileInfo}
-                            jobItem={jobItem}
-                            jobApplications={jobApplications}
-                          />
-                        ) : (
-                          <RecruiterJobCard
-                            key={jobItem.name}
-                            profileInfo={profileInfo}
-                            jobItem={jobItem}
-                            jobApplications={jobApplications}
-                          />
-                        )
-                      )
-                    : null}
-                </div>
-              </div>
-            </div>
+
+        {/* Job Cards Grid */}
+        <div className="pt-10 pb-24">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {jobList && jobList.length > 0 ? (
+              jobList.map((jobItem) =>
+                profileInfo?.role === "candidate" ? (
+                  <CandidateJobCard
+                    key={jobItem.name}
+                    profileInfo={profileInfo}
+                    jobItem={jobItem}
+                    jobApplications={jobApplications}
+                  />
+                ) : (
+                  <RecruiterJobCard
+                    key={jobItem.name}
+                    profileInfo={profileInfo}
+                    jobItem={jobItem}
+                    jobApplications={jobApplications}
+                  />
+                )
+              )
+            ) : (
+              <p className="col-span-full text-center text-gray-500 dark:text-gray-400">
+                No jobs found. Try adjusting your filters.
+              </p>
+            )}
           </div>
         </div>
       </div>
